@@ -6,7 +6,7 @@ function getRandomInteger(from, to) {
     return result >= from ? result : getRandomInteger(from, to);
   }
 
-  throw 'Input data error';
+  throw new Error('Input data error');
 }
 
 function getRandomFloat(from, to, decimal = 2) {
@@ -15,7 +15,7 @@ function getRandomFloat(from, to, decimal = 2) {
     return result >= from ? result : getRandomFloat(from, to, decimal);
   }
 
-  throw 'Input data error';
+  throw new Error('Input data error');
 }
 
 getRandomInteger(0, 5);
