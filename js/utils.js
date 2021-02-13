@@ -35,10 +35,34 @@ function fillArray(array, values) {
   return newArray;
 }
 
+function getTypeHouse(type) {
+  switch (type) {
+    case 'flat':
+      return 'Квартира';
+    case 'bungalow':
+      return 'Бунгало';
+    case 'house':
+      return 'Дом';
+    case 'palace':
+      return 'Дворец';
+  }
+}
+
+function checkGuests(guests) {
+  return guests > 1 ? guests + ' гостей' : guests + ' гостя';
+}
+
+function checkRooms(rooms) {
+  return rooms > 1 ? rooms + ' комнаты' : rooms + ' комната';
+}
+
 export {
   getRandomInteger,
   getRandomFloat,
   getZeroFirst,
   getRandomArrayElement,
   fillArray,
+  getTypeHouse,
+  checkRooms,
+  checkGuests,
 };
