@@ -6,7 +6,7 @@ function getRandomInteger(from, to) {
   throw new Error('Input data error');
 }
 
-function getRandomFloat(from, to, decimal = 2) {
+function getRandomFloat(from, to, decimal = 5) {
   if (to > from && from >= 0) {
     return +(Math.random() * (to - from) + from).toFixed(decimal);
   }
@@ -35,34 +35,9 @@ function fillArray(array, values) {
   return newArray;
 }
 
-function getTypeHouse(type) {
-  switch (type) {
-    case 'flat':
-      return 'Квартира';
-    case 'bungalow':
-      return 'Бунгало';
-    case 'house':
-      return 'Дом';
-    case 'palace':
-      return 'Дворец';
-  }
+function declOfNum(number, titles) {
+  const cases = [2, 0, 1, 1, 1, 2];
+  return titles[number % 100 > 4 && number % 100 < 20 ? 2 : cases[number % 10 < 5 ? number % 10 : 5]];
 }
 
-function checkGuests(guests) {
-  return guests > 1 ? guests + ' гостей' : guests + ' гостя';
-}
-
-function checkRooms(rooms) {
-  return rooms > 1 ? rooms + ' комнаты' : rooms + ' комната';
-}
-
-export {
-  getRandomInteger,
-  getRandomFloat,
-  getZeroFirst,
-  getRandomArrayElement,
-  fillArray,
-  getTypeHouse,
-  checkRooms,
-  checkGuests,
-};
+export { getRandomInteger, getRandomFloat, getZeroFirst, getRandomArrayElement, fillArray, declOfNum };
