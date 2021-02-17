@@ -6,14 +6,26 @@ const MIN_COORDINATE_X = 35.65;
 const MAX_COORDINATE_X = 35.7;
 const MIN_COORDINATE_Y = 139.7;
 const MAX_COORDINATE_Y = 139.8;
-const ADVERT_COUNT = 1;
+const ADVERT_COUNT = 10;
 const MIN_PRICE = 0;
 const MAX_PRICE = 1000000;
 const OFFERS_LABELS = {
-  palace: 'Дворец',
-  flat: 'Квартира',
-  house: 'Дом',
-  bungalow: 'Бунгало',
+  palace: {
+    type: 'Дворец',
+    price: 10000,
+  },
+  flat: {
+    type: 'Квартира',
+    price: 1000,
+  },
+  house: {
+    type: 'Дом',
+    price: 5000,
+  },
+  bungalow: {
+    type: 'Бунгало',
+    price: 0,
+  },
 };
 const MIN_ROOM = 1;
 const MAX_ROOM = 3;
@@ -24,11 +36,7 @@ const DEPARTURES = ['12:00', '13:00', '14:00'];
 const TITLE = 'отель СПб';
 const DESCRIPTION = 'уютный дом для всех';
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-const PHOTOS = [
-  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
-];
+const PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 const MIN_ELEMENT = 1;
 
 const houseTypes = Object.keys(OFFERS_LABELS);

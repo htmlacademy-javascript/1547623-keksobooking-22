@@ -14,3 +14,6 @@ extends:
 rules:
   semi: "error"
   comma-dangle: 0
+
+globals:
+  L: true

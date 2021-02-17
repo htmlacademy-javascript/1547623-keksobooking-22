@@ -18,13 +18,10 @@ function createCardsMarkup(array) {
     cardElement.querySelector('.popup__title').textContent = offer.title;
     cardElement.querySelector('.popup__text--address').textContent = offer.address;
     cardElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-    cardElement.querySelector('.popup__type').textContent = OFFERS_LABELS[offer.type];
+    cardElement.querySelector('.popup__type').textContent = OFFERS_LABELS[offer.type].type;
     cardElement.querySelector('.popup__description').textContent = offer.description;
-    cardElement.querySelector('.popup__text--capacity').textContent = `
-    ${offer.rooms} ${declOfNum(offer.rooms, TEXT_FORM_ROOMS)}
-    для ${offer.guests} ${declOfNum(offer.guests, TEXT_FORM_GUESTS)}`;
-    cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin},
-    выезд до ${offer.checkout}`;
+    cardElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} ${declOfNum(offer.rooms, TEXT_FORM_ROOMS)} для ${offer.guests} ${declOfNum(offer.guests, TEXT_FORM_GUESTS)}`;
+    cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
     featureListElement.innerHTML = '';
     for (let i = 0; i < offer.features.length; i++) {
