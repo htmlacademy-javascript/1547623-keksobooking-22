@@ -24,19 +24,21 @@ function createCardsMarkup(array) {
     cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
     featureListElement.innerHTML = '';
-    for (let i = 0; i < offer.features.length; i++) {
+    photoListElement.innerHTML = '';
+
+    offer.features.forEach((item) => {
       const feature = document.createElement('li');
-      const featureClass = `popup__feature--${offer.features[i]}`;
+      const featureClass = `popup__feature--${item}`;
       feature.classList.add('popup__feature', featureClass);
       featureListElement.appendChild(feature);
-    }
+    });
 
-    photoListElement.innerHTML = '';
-    for (let i = 0; i < offer.photos.length; i++) {
+    offer.photos.forEach((item) => {
       const photoElement = cardTemplateElement.querySelector('.popup__photo').cloneNode(true);
-      photoElement.src = offer.photos[i];
+      photoElement.src = item;
       photoListElement.appendChild(photoElement);
-    }
+    });
+
     cardListFragment.appendChild(cardElement);
   });
 

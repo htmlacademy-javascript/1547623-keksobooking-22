@@ -1,37 +1,54 @@
-import { addressElement, formFilterElement, formAdvertElement, fieldAdvertElements, housingFilterElements, housingFeatureElement } from './form.js';
+import { enableForm, setAddress } from './form.js';
+import { createCardsMarkup } from './popup.js';
 
-const map = L.map('map-canvas')
-  .on('load', () => {
-    formFilterElement.classList.remove('map__filters--disabled');
-    formAdvertElement.classList.remove('ad-form--disabled');
+const MAP_COORDINATES = {
+  lat: 35.68951,
+  lng: 139.69201,
+};
+const MAIN_ICON_WIDTH = 50;
+const MAIN_ICON_HEIGHT = 82;
+const ICON_WIDTH = 25;
+const ICON_HEIGHT = 41;
+const VIEW_DISTANCE = 10;
 
-    fieldAdvertElements.forEach((item) => item.removeAttribute('disabled'));
-    housingFilterElements.forEach((item) => item.removeAttribute('disabled'));
-    housingFeatureElement.removeAttribute('disabled');
-  })
-  .setView({ lat: 35.68951, lng: 139.69201 }, 10);
+function initMap(adverts) {
+  const map = L.map('map-canvas')
+    .on('load', () => {
+      enableForm();
+      setAddress(MAP_COORDINATES);
+    })
+    .setView(MAP_COORDINATES, VIEW_DISTANCE);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-}).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
 
-const pinIcon = L.icon({
-  iconUrl: '../leaflet/images/marker-icon-2x.png',
-  iconSize: [25, 41],
-  iconAnchor: [12.5, 41],
-});
+  const mainPinIcon = L.icon({
+    iconUrl: '../leaflet/images/marker-icon-2x.png',
+    iconSize: [MAIN_ICON_WIDTH, MAIN_ICON_HEIGHT],
+    iconAnchor: [MAIN_ICON_WIDTH / 2, MAIN_ICON_HEIGHT],
+  });
 
-const mainPinIcon = L.icon({
-  iconUrl: '../leaflet/images/marker-icon-2x.png',
-  iconSize: [50, 82],
-  iconAnchor: [25, 82],
-});
+  const pinIcon = L.icon({
+    iconUrl: '../leaflet/images/marker-icon-2x.png',
+    iconSize: [ICON_WIDTH, ICON_HEIGHT],
+    iconAnchor: [ICON_WIDTH / 2, ICON_HEIGHT],
+  });
 
-const mainMarker = L.marker({ lat: 35.68951, lng: 139.69201 }, { draggable: true, icon: mainPinIcon });
+  const mainMarker = L.marker(MAP_COORDINATES, { draggable: true, icon: mainPinIcon });
 
-mainMarker.addTo(map);
+  mainMarker.on('move', (evt) => {
+    setAddress(evt.target.getLatLng());
+  });
 
-addressElement.setAttribute('readonly', '');
-addressElement.value = '35.68951, 139.69201';
+  mainMarker.addTo(map);
 
-export { map, pinIcon, mainMarker };
+  adverts.forEach((item) => {
+    const marker = L.marker({ lat: item.location.x, lng: item.location.y }, { icon: pinIcon });
+    marker.addTo(map).bindPopup(createCardsMarkup([item]).cloneNode(true).firstChild);
+  });
+
+  return map;
+}
+
+export { initMap, MAP_COORDINATES };
