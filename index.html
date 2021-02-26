@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <main>
+  <main class="main">
     <div class="promo">
       <h1 class="promo__title visually-hidden">Keksobooking. Кексы по соседству</h1>
       <img src="img/keksobooking.svg" alt="Keksobooking. Кексы по соседству" width="215" height="45">
@@ -215,17 +215,23 @@
   </template>
 
   <!-- Сообщение об успешном создании объявления -->
-  <template id="success">
+  <template class="template-success" id="success">
     <div class="success">
       <p class="success__message">Ваше объявление<br>успешно размещено!</p>
     </div>
   </template>
 
   <!-- Сообщение об ошибке создания объявления -->
-  <template id="error">
+  <template class="template-error" id="error">
     <div class="error">
       <p class="error__message">Ошибка размещения объявления</p>
       <button type="button" class="error__button">Попробовать снова</button>
+    </div>
+  </template>
+
+  <template class="template-alert">
+    <div class="alert">
+      <p class="alert__message">Ошибка получения объявлений</p>
     </div>
   </template>
 
