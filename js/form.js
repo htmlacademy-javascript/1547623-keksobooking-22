@@ -1,25 +1,11 @@
 import { OFFERS_LABELS } from './data.js';
+import { sendData } from './api.js';
 
 const DECIMAL_POINT = 5;
-const ROOM_GUEST_CAPACITY = {
-  one: {
-    max: 1,
-    choice: [1],
-  },
-  two: {
-    max: 2,
-    choice: [1, 2],
-  },
-  three: {
-    max: 3,
-    choice: [1, 2, 3],
-  },
-  oneHundred: {
-    max: 0,
-    choice: [0],
-  },
-};
+const ERROR_RECEIVING_TEXT = 'Не удалось загрузить объявления. Попробуйте перезагрузить страницу';
+const ALERT_SHOW_TIME = 5000;
 
+const mainElement = document.querySelector('.main');
 const houseTypeElement = document.querySelector('.house-type');
 const housePriceElement = document.querySelector('.house-price');
 const timeInElement = document.querySelector('.timein');
@@ -32,13 +18,19 @@ const fieldAdvertElements = document.querySelectorAll('.ad-form fieldset');
 const addressElement = document.querySelector('.address');
 const roomCountElement = document.querySelector('.room-number');
 const roomCapacityElement = document.querySelector('.capacity');
+const userFormElement = document.querySelector('.ad-form');
+const successMessageTemplateElement = document.querySelector('.template-success').content.querySelector('.success');
+const errorMessageTemplateElement = document.querySelector('.template-error').content.querySelector('.error');
+const alertMessageTemplateElement = document.querySelector('.template-alert').content.querySelector('.alert');
 
 addressElement.setAttribute('readonly', '');
 
 houseTypeElement.addEventListener('change', onHouseTypeElementChange);
 timeInElement.addEventListener('change', ontimeInElementChange);
 timeOutElement.addEventListener('change', ontimeOutElementChange);
-roomCountElement.addEventListener('change', onCheckCapasityChange);
+roomCountElement.addEventListener('change', onRoomCountElementChange);
+roomCapacityElement.addEventListener('change', onRoomCapacityElementChange);
+userFormElement.addEventListener('submit', onUserFormElementSubmit);
 
 formFilterElement.classList.add('map__filters--disabled');
 formAdvertElement.classList.add('ad-form--disabled');
@@ -74,43 +66,73 @@ function setAddress(coords) {
   addressElement.value = `${coords.lat.toFixed(DECIMAL_POINT)}, ${coords.lng.toFixed(DECIMAL_POINT)}`;
 }
 
-function addDisabledRoomCapasity() {
-  roomCapacityElement.querySelectorAll('option').forEach((item) => {
-    item.setAttribute('disabled', '');
-  });
-}
-
-function removeDisabledRoomCapasity(optionValue) {
-  optionValue.forEach((item) => {
-    roomCapacityElement.querySelector(`option[value="${item}"]`).removeAttribute('disabled');
-  });
-}
-
-function onCheckCapasityChange() {
-  switch (roomCountElement.value) {
-    case '1':
-      addDisabledRoomCapasity();
-      removeDisabledRoomCapasity(ROOM_GUEST_CAPACITY.one.choice);
-      roomCapacityElement.value = ROOM_GUEST_CAPACITY.one.max;
-      break;
-    case '2':
-      addDisabledRoomCapasity();
-      removeDisabledRoomCapasity(ROOM_GUEST_CAPACITY.two.choice);
-      roomCapacityElement.value = ROOM_GUEST_CAPACITY.two.max;
-      break;
-    case '3':
-      addDisabledRoomCapasity();
-      removeDisabledRoomCapasity(ROOM_GUEST_CAPACITY.three.choice);
-      roomCapacityElement.value = ROOM_GUEST_CAPACITY.three.max;
-      break;
-    case '100':
-      addDisabledRoomCapasity();
-      removeDisabledRoomCapasity(ROOM_GUEST_CAPACITY.oneHundred.choice);
-      roomCapacityElement.value = ROOM_GUEST_CAPACITY.oneHundred.max;
-      break;
+function checkCapacity() {
+  if (roomCountElement.value === '100' && roomCapacityElement.value !== '0') {
+    roomCapacityElement.setCustomValidity('Не для гостей');
+  } else if ((roomCapacityElement.value === '0' && roomCountElement.value !== '100') || roomCountElement.value < roomCapacityElement.value) {
+    roomCountElement.setCustomValidity('Недостаточно комнат');
+  } else {
+    roomCountElement.setCustomValidity('');
+    roomCapacityElement.setCustomValidity('');
   }
 }
 
-onCheckCapasityChange();
+function onRoomCountElementChange() {
+  checkCapacity();
+}
 
-export { enableForm, setAddress };
+function onRoomCapacityElementChange() {
+  checkCapacity();
+}
+
+function onUserFormElementSubmit(evt) {
+  evt.preventDefault();
+
+  sendData(getSuccessSendMessage, getFailSendMessage, new FormData(evt.target));
+}
+
+function createMessage(template, reset) {
+  const message = template.cloneNode(true);
+
+  if (reset) {
+    userFormElement.reset();
+  }
+
+  mainElement.appendChild(message);
+
+  removeMessage(message);
+}
+
+function removeMessage(message) {
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape') {
+      message.remove();
+    }
+  });
+
+  document.addEventListener('click', () => {
+    message.remove();
+  });
+}
+
+function getSuccessSendMessage() {
+  createMessage(successMessageTemplateElement, true);
+}
+
+function getFailSendMessage() {
+  createMessage(errorMessageTemplateElement);
+}
+
+function getFailReceivingMessage() {
+  const alert = alertMessageTemplateElement.cloneNode(true);
+
+  alert.querySelector('.alert__message').textContent = ERROR_RECEIVING_TEXT;
+
+  document.body.append(alert);
+
+  setTimeout(() => {
+    alert.remove();
+  }, ALERT_SHOW_TIME);
+}
+
+export { enableForm, setAddress, getFailReceivingMessage };

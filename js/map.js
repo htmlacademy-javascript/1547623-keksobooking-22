@@ -43,10 +43,12 @@ function initMap(adverts) {
 
   mainMarker.addTo(map);
 
-  adverts.forEach((item) => {
-    const marker = L.marker({ lat: item.location.x, lng: item.location.y }, { icon: pinIcon });
-    marker.addTo(map).bindPopup(createCardsMarkup([item]).cloneNode(true).firstChild);
-  });
+  try {
+    adverts.forEach((item) => {
+      const marker = L.marker({ lat: item.location.lat, lng: item.location.lng }, { icon: pinIcon });
+      marker.addTo(map).bindPopup(createCardsMarkup([item]).cloneNode(true).firstChild);
+    });
+  } catch (err) {}
 
   return map;
 }

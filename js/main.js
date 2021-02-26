@@ -2,8 +2,9 @@ import './data.js';
 import './popup.js';
 import './form.js';
 import './map.js';
-import { createAdverts } from './data.js';
+import './api.js';
 import { initMap } from './map.js';
+import { getData } from './api.js';
+import { getFailReceivingMessage } from './form.js';
 
-const adverts = createAdverts();
-initMap(adverts);
+getData(initMap, getFailReceivingMessage);
