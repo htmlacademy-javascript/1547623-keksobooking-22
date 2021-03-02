@@ -5,6 +5,6 @@ import './map.js';
 import './api.js';
 import { initMap } from './map.js';
 import { getData } from './api.js';
-import { getFailReceivingMessage } from './form.js';
+import { createFailReceivingMessage } from './form.js';
 
-getData(initMap, getFailReceivingMessage);
+getData(initMap, createFailReceivingMessage);

@@ -1,7 +1,15 @@
+import { setHouseTypeFilter } from './form.js';
+
+const RECEIVING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking/data';
+const SENDING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking';
+
 function getData(onSuccess, onFail) {
-  fetch('https://22.javascript.pages.academy/keksobooking/data')
+  fetch(RECEIVING_DATA_URL)
     .then((response) => response.json())
-    .then((data) => onSuccess(data))
+    .then((data) => {
+      onSuccess(data);
+      setHouseTypeFilter(data);
+    })
     .catch(() => {
       onSuccess();
       onFail();
@@ -9,7 +17,7 @@ function getData(onSuccess, onFail) {
 }
 
 function sendData(onSuccess, onFail, body) {
-  fetch('https://22.javascript.pages.academy/keksobooking', {
+  fetch(SENDING_DATA_URL, {
     method: 'POST',
     body,
   })
