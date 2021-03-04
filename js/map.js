@@ -1,5 +1,7 @@
-import { enableForm, setAddress, houseTypeFilterElement } from './form.js';
+import { setAddress } from './form.js';
 import { createCardsMarkup } from './popup.js';
+import { enableForm, addOnChangeForFilters, getFilteredAdverts } from './filter.js';
+import { debounce } from './utils.js';
 
 const MAP_COORDINATES = {
   lat: 35.68951,
@@ -10,9 +12,7 @@ const MAIN_ICON_HEIGHT = 82;
 const ICON_WIDTH = 25;
 const ICON_HEIGHT = 41;
 const VIEW_DISTANCE = 10;
-const MIN_ARRAY_LENGTH = 1;
-const MAX_ARRAY_LENGTH = 10;
-const DEFAULT_HOUSE_TYPE = 'any';
+const RERENDER_DELAY = 500;
 
 const map = L.map('map-canvas');
 
@@ -52,7 +52,10 @@ function initMap(adverts) {
 
   mainMarker.addTo(map);
 
-  createMarkers(adverts);
+  if (adverts && adverts.length) {
+    addOnChangeForFilters(debounce(() => createMarkers(getFilteredAdverts(adverts)), RERENDER_DELAY));
+    createMarkers(getFilteredAdverts(adverts));
+  }
 
   return map;
 }
@@ -61,16 +64,17 @@ function setPositionMainMarker(coords) {
   mainMarker.setLatLng(coords);
 }
 
-function createMarkers(array) {
-  markers.clearLayers();
-  if (array instanceof Array && array.length >= MIN_ARRAY_LENGTH) {
-    array.forEach((item, i) => {
-      if (i < MAX_ARRAY_LENGTH && (item.offer.type === houseTypeFilterElement.value || houseTypeFilterElement.value === DEFAULT_HOUSE_TYPE)) {
-        const marker = L.marker({ lat: item.location.lat, lng: item.location.lng }, { icon: pinIcon });
-        marker.addTo(markers).bindPopup(createCardsMarkup([item]).cloneNode(true).firstChild);
-      }
-    });
-  }
+function resetMainMarker(coords) {
+  setAddress(coords);
+  setPositionMainMarker(coords);
 }
 
-export { initMap, MAP_COORDINATES, map, setPositionMainMarker, createMarkers };
+function createMarkers(array) {
+  markers.clearLayers();
+  array.forEach((item) => {
+    const marker = L.marker({ lat: item.location.lat, lng: item.location.lng }, { icon: pinIcon });
+    marker.addTo(markers).bindPopup(createCardsMarkup([item]).cloneNode(true).firstChild);
+  });
+}
+
+export { initMap, MAP_COORDINATES, map, setPositionMainMarker, createMarkers, resetMainMarker };
