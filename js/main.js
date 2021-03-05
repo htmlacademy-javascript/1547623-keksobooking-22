@@ -3,8 +3,23 @@ import './popup.js';
 import './form.js';
 import './map.js';
 import './api.js';
+import './filter.js';
 import { initMap } from './map.js';
-import { getData } from './api.js';
-import { createFailReceivingMessage } from './form.js';
+import { getData, sendData } from './api.js';
+import { userFormElement } from './form.js';
+import { createFailReceivingMessage, createSuccessSendMessage, createFailSendMessage } from './utils.js';
 
-getData(initMap, createFailReceivingMessage);
+const RECEIVING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking/data';
+const SENDING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking';
+
+getData(RECEIVING_DATA_URL, initMap, () => {
+  initMap();
+  createFailReceivingMessage();
+});
+
+userFormElement.addEventListener('submit', onUserFormElementSubmit);
+
+function onUserFormElementSubmit(evt) {
+  evt.preventDefault();
+  sendData(SENDING_DATA_URL, createSuccessSendMessage, createFailSendMessage, new FormData(evt.target));
+}
