@@ -1,7 +1,6 @@
 import { formAdvertElement, fieldAdvertElements } from './form.js';
 
-const MAX_ARRAY_LENGTH = 10;
-const START_ARRAY_POINT = 0;
+const MAX_ADVERTS_COUNT = 10;
 const DEFAULT_FILTER_VALUE = 'any';
 const HOUSING_PRICE = {
   middle: {
@@ -19,6 +18,7 @@ const houseTypeFilterElement = document.querySelector('.map__filter--type');
 const housePriceFilterElement = document.querySelector('.map__filter--price');
 const houseRoomsFilterElement = document.querySelector('.map__filter--rooms');
 const houseGuestsFilterElement = document.querySelector('.map__filter--guests');
+const filtersElements = document.querySelectorAll('.map__filter');
 const mapFeaturesElements = document.querySelectorAll('.map__checkbox');
 
 formFilterElement.classList.add('map__filters--disabled');
@@ -26,12 +26,7 @@ housingFilterElements.forEach((item) => item.setAttribute('disabled', ''));
 housingFeatureElement.setAttribute('disabled', '');
 
 function addOnChangeForFilters(cb) {
-  [houseTypeFilterElement, housePriceFilterElement, houseRoomsFilterElement, houseGuestsFilterElement].forEach((item) => {
-    item.addEventListener('change', () => {
-      cb();
-    });
-  });
-  mapFeaturesElements.forEach((item) => {
+  [...filtersElements, ...mapFeaturesElements].forEach((item) => {
     item.addEventListener('change', () => {
       cb();
     });
@@ -50,17 +45,29 @@ function enableForm() {
 function getFilteredAdverts(array) {
   const filteredAdverts = [];
 
-  array.forEach((item) => {
-    if (checkAdvertsByType(item) && checkAdvertsByPrice(item) && checkAdvertsByRooms(item) && checkAdvertsByGuests(item) && checkAdvertsByFeatures(item)) {
-      filteredAdverts.push(item);
+  for (let i = 0; i < MAX_ADVERTS_COUNT; i++) {
+    if (
+      checkAdverts(array[i], 'type', houseTypeFilterElement) &&
+      checkAdverts(array[i], 'rooms', houseRoomsFilterElement, true) &&
+      checkAdverts(array[i], 'guests', houseGuestsFilterElement, true) &&
+      checkAdvertsByPrice(array[i]) &&
+      checkAdvertsByFeatures(array[i])
+    ) {
+      filteredAdverts.push(array[i]);
     }
-  });
+  }
 
-  return filteredAdverts.slice(START_ARRAY_POINT, MAX_ARRAY_LENGTH);
+  return filteredAdverts;
 }
 
-function checkAdvertsByType(ads) {
-  return ads.offer.type === houseTypeFilterElement.value || houseTypeFilterElement.value === DEFAULT_FILTER_VALUE;
+function checkAdverts(ads, filter, element, number) {
+  let value = element.value;
+
+  if (number) {
+    value = +element.value;
+  }
+
+  return ads.offer[filter] === value || element.value === DEFAULT_FILTER_VALUE;
 }
 
 function checkAdvertsByPrice(ads) {
@@ -81,35 +88,18 @@ function checkAdvertsByPrice(ads) {
   return true;
 }
 
-function checkAdvertsByRooms(ads) {
-  return ads.offer.rooms.toString() === houseRoomsFilterElement.value || houseRoomsFilterElement.value === DEFAULT_FILTER_VALUE;
-}
-
-function checkAdvertsByGuests(ads) {
-  return ads.offer.guests.toString() === houseGuestsFilterElement.value || houseGuestsFilterElement.value === DEFAULT_FILTER_VALUE;
-}
-
-// function checkAdvertsByFeatures(ads) {
-//   let flag = true;
-//   mapFeaturesElements.forEach((item) => {
-//     if (item.checked) {
-//       if (ads.offer.features.indexOf(item.value) === -1) {
-//         flag = false;
-//       }
-//     }
-//   });
-//   return flag;
-// }
-
 function checkAdvertsByFeatures(ads) {
-  for (let i = 0; i < mapFeaturesElements.length; i++) {
-    if (mapFeaturesElements[i].checked) {
-      if (ads.offer.features.indexOf(mapFeaturesElements[i].value) === -1) {
-        return false;
-      }
+  return [...mapFeaturesElements].every((item) => {
+    if (item.checked) {
+      return ads.offer.features.indexOf(item.value) !== -1;
+    } else {
+      return true;
     }
-  }
-  return true;
+  });
 }
 
-export { houseTypeFilterElement, formFilterElement, addOnChangeForFilters, enableForm, getFilteredAdverts };
+function resetFilters() {
+  formFilterElement.reset();
+}
+
+export { houseTypeFilterElement, MAX_ADVERTS_COUNT, addOnChangeForFilters, enableForm, getFilteredAdverts, resetFilters };

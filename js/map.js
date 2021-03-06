@@ -1,6 +1,6 @@
 import { setAddress } from './form.js';
 import { createCardsMarkup } from './popup.js';
-import { enableForm, addOnChangeForFilters, getFilteredAdverts } from './filter.js';
+import { enableForm, addOnChangeForFilters, getFilteredAdverts, MAX_ADVERTS_COUNT } from './filter.js';
 import { debounce } from './utils.js';
 
 const MAP_COORDINATES = {
@@ -21,7 +21,6 @@ const mainPinIcon = L.icon({
   iconSize: [MAIN_ICON_WIDTH, MAIN_ICON_HEIGHT],
   iconAnchor: [MAIN_ICON_WIDTH / 2, MAIN_ICON_HEIGHT],
 });
-
 const pinIcon = L.icon({
   iconUrl: '../leaflet/images/marker-icon-2x.png',
   iconSize: [ICON_WIDTH, ICON_HEIGHT],
@@ -29,10 +28,11 @@ const pinIcon = L.icon({
 });
 
 const mainMarker = L.marker(MAP_COORDINATES, { draggable: true, icon: mainPinIcon });
-
 const markers = L.layerGroup().addTo(map);
 
-function initMap(adverts) {
+let defaultAdverts = [];
+
+function initMap() {
   map
     .on('load', () => {
       enableForm();
@@ -49,15 +49,17 @@ function initMap(adverts) {
   mainMarker.on('move', (evt) => {
     setAddress(evt.target.getLatLng());
   });
-
   mainMarker.addTo(map);
 
+  return map;
+}
+
+function setAdverts(adverts) {
   if (adverts && adverts.length) {
+    defaultAdverts = adverts.slice(0, MAX_ADVERTS_COUNT);
     addOnChangeForFilters(debounce(() => createMarkers(getFilteredAdverts(adverts)), RERENDER_DELAY));
     createMarkers(getFilteredAdverts(adverts));
   }
-
-  return map;
 }
 
 function setPositionMainMarker(coords) {
@@ -77,4 +79,16 @@ function createMarkers(array) {
   });
 }
 
-export { initMap, MAP_COORDINATES, map, setPositionMainMarker, createMarkers, resetMainMarker };
+function resetMarkers() {
+  if (defaultAdverts && defaultAdverts.length) {
+    createMarkers(defaultAdverts);
+  }
+}
+
+function resetMap() {
+  map.closePopup();
+  resetMainMarker(MAP_COORDINATES);
+  resetMarkers();
+}
+
+export { initMap, setAdverts, MAP_COORDINATES, map, createMarkers, resetMap };

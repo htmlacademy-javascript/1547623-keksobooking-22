@@ -1,10 +1,10 @@
 import { OFFERS_LABELS } from './data.js';
-import { map, MAP_COORDINATES, resetMainMarker } from './map.js';
-import { formFilterElement, houseTypeFilterElement } from './filter.js';
+import { resetFilters } from './filter.js';
+import { resetMap } from './map.js';
 
 const DECIMAL_POINT = 5;
-const MAX_ROOM_COUNT = '100';
-const MIN_ROOM_CAPACITY = '0';
+const MAX_ROOM_COUNT = 100;
+const MIN_ROOM_CAPACITY = 0;
 
 const houseTypeElement = document.querySelector('.house-type');
 const housePriceElement = document.querySelector('.house-price');
@@ -31,6 +31,10 @@ formAdvertElement.classList.add('ad-form--disabled');
 fieldAdvertElements.forEach((item) => item.setAttribute('disabled', ''));
 
 function onHouseTypeElementChange() {
+  setMinPriceForHouseType();
+}
+
+function setMinPriceForHouseType() {
   const type = houseTypeElement.value;
   housePriceElement.placeholder = OFFERS_LABELS[type].price;
   housePriceElement.min = OFFERS_LABELS[type].price;
@@ -49,9 +53,12 @@ function setAddress(coords) {
 }
 
 function checkCapacity() {
-  if (roomCountElement.value === MAX_ROOM_COUNT && roomCapacityElement.value !== MIN_ROOM_CAPACITY) {
+  const roomCapacity = +roomCapacityElement.value;
+  const roomCount = +roomCountElement.value;
+
+  if (roomCount === MAX_ROOM_COUNT && roomCapacity !== MIN_ROOM_CAPACITY) {
     roomCapacityElement.setCustomValidity('Не для гостей');
-  } else if ((roomCapacityElement.value === MIN_ROOM_CAPACITY && roomCountElement.value !== MAX_ROOM_COUNT) || roomCountElement.value < roomCapacityElement.value) {
+  } else if ((roomCapacity === MIN_ROOM_CAPACITY && roomCount !== MAX_ROOM_COUNT) || roomCount < roomCapacity) {
     roomCountElement.setCustomValidity('Недостаточно комнат');
   } else {
     roomCountElement.setCustomValidity('');
@@ -69,21 +76,18 @@ function onRoomCapacityElementChange() {
 
 function onResetFormElementClick(evt) {
   evt.preventDefault();
-  resetUserForm();
-  resetMainMarker(MAP_COORDINATES);
-  map.closePopup();
-  houseTypeFilterElement.dispatchEvent(new Event('change'));
+  resetUserActions();
 }
 
-function resetUserForm() {
+function resetForm() {
   userFormElement.reset();
-  formFilterElement.reset();
 }
 
 function resetUserActions() {
-  resetUserForm();
-  resetMainMarker(MAP_COORDINATES);
-  map.closePopup();
+  resetForm();
+  setMinPriceForHouseType();
+  resetFilters();
+  resetMap();
 }
 
-export { setAddress, resetUserActions, formAdvertElement, fieldAdvertElements, userFormElement };
+export { setAddress, resetForm, resetUserActions, formAdvertElement, fieldAdvertElements, userFormElement };
