@@ -4,7 +4,8 @@ import './form.js';
 import './map.js';
 import './api.js';
 import './filter.js';
-import { initMap } from './map.js';
+import './photo.js';
+import { initMap, setAdverts } from './map.js';
 import { getData, sendData } from './api.js';
 import { userFormElement } from './form.js';
 import { createFailReceivingMessage, createSuccessSendMessage, createFailSendMessage } from './utils.js';
@@ -12,10 +13,17 @@ import { createFailReceivingMessage, createSuccessSendMessage, createFailSendMes
 const RECEIVING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking/data';
 const SENDING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking';
 
-getData(RECEIVING_DATA_URL, initMap, () => {
-  initMap();
-  createFailReceivingMessage();
-});
+getData(
+  RECEIVING_DATA_URL,
+  (data) => {
+    initMap();
+    setAdverts(data);
+  },
+  () => {
+    initMap();
+    createFailReceivingMessage();
+  }
+);
 
 userFormElement.addEventListener('submit', onUserFormElementSubmit);
 
