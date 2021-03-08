@@ -45,7 +45,7 @@ function enableForm() {
 function getFilteredAdverts(array) {
   const filteredAdverts = [];
 
-  for (let i = 0; i < MAX_ADVERTS_COUNT; i++) {
+  for (let i = 0; filteredAdverts.length < MAX_ADVERTS_COUNT && array[i]; i++) {
     if (
       checkAdverts(array[i], 'type', houseTypeFilterElement) &&
       checkAdverts(array[i], 'rooms', houseRoomsFilterElement, true) &&

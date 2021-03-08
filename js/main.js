@@ -4,7 +4,7 @@ import './form.js';
 import './map.js';
 import './api.js';
 import './filter.js';
-import './avatar.js';
+import './photo.js';
 import { initMap, setAdverts } from './map.js';
 import { getData, sendData } from './api.js';
 import { userFormElement } from './form.js';

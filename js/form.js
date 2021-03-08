@@ -1,6 +1,7 @@
 import { OFFERS_LABELS } from './data.js';
 import { resetFilters } from './filter.js';
 import { resetMap } from './map.js';
+import { resetPhoto } from './photo.js';
 
 const DECIMAL_POINT = 5;
 const MAX_ROOM_COUNT = 100;
@@ -88,6 +89,7 @@ function resetUserActions() {
   setMinPriceForHouseType();
   resetFilters();
   resetMap();
+  resetPhoto();
 }
 
 export { setAddress, resetForm, resetUserActions, formAdvertElement, fieldAdvertElements, userFormElement };
