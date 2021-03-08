@@ -18,12 +18,12 @@ const RERENDER_DELAY = 500;
 const map = L.map('map-canvas');
 
 const mainPinIcon = L.icon({
-  iconUrl: '../leaflet/images/marker-icon-2x.png',
+  iconUrl: './leaflet/images/marker-icon-2x.png',
   iconSize: [MAIN_ICON_WIDTH, MAIN_ICON_HEIGHT],
   iconAnchor: [MAIN_ICON_WIDTH / 2, MAIN_ICON_HEIGHT],
 });
 const pinIcon = L.icon({
-  iconUrl: '../leaflet/images/marker-icon.png',
+  iconUrl: './leaflet/images/marker-icon.png',
   iconSize: [ICON_WIDTH, ICON_HEIGHT],
   iconAnchor: [ICON_WIDTH / 2, ICON_HEIGHT],
 });
