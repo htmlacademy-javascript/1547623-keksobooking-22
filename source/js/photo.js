@@ -12,7 +12,7 @@ setChangeEventPhoto(housingChooserElement, housingPreviewElement);
 setChangeEventPhoto(avatarChooserElement, avatarPreviewElement);
 
 function setChangeEventPhoto(input, preview) {
-  input.addEventListener('change', () => {
+  input.addEventListener('change', function () {
     setPhoto(input, preview);
   });
 }
@@ -21,14 +21,14 @@ function setPhoto(input, preview) {
   const file = input.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some((it) => {
+  const matches = FILE_TYPES.some(function (it) {
     return fileName.endsWith(it);
   });
 
   if (matches) {
     const reader = new FileReader();
 
-    reader.addEventListener('load', () => {
+    reader.addEventListener('load', function () {
       preview.src = reader.result;
     });
 
@@ -43,7 +43,9 @@ function resetPhoto() {
 
 function setDefaultValues(element, attribute, value) {
   if (element.length) {
-    element.forEach((item) => (item[attribute] = value));
+    element.forEach(function (item) {
+      item[attribute] = value;
+    });
   } else {
     element[attribute] = value;
   }

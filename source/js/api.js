@@ -1,10 +1,12 @@
 function getData(url, onSuccess, onFail) {
   fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
       onSuccess(data);
     })
-    .catch(() => {
+    .catch(function () {
       onFail();
     });
 }
@@ -14,14 +16,16 @@ function sendData(url, onSuccess, onFail, body) {
     method: 'POST',
     body,
   })
-    .then((response) => {
+    .then(function (response) {
       if (response.ok) {
         onSuccess();
       } else {
         onFail();
       }
     })
-    .catch(() => onFail());
+    .catch(function () {
+      onFail();
+    });
 }
 
 export { getData, sendData };

@@ -28,7 +28,7 @@ function createMessage(template, reset) {
 function removeMessage(message) {
   document.addEventListener(
     'keydown',
-    (evt) => {
+    function (evt) {
       if (evt.key === 'Escape') {
         message.remove();
       }
@@ -38,7 +38,7 @@ function removeMessage(message) {
 
   document.addEventListener(
     'click',
-    () => {
+    function () {
       message.remove();
     },
     { once: true }
@@ -60,7 +60,7 @@ function createFailReceivingMessage() {
 
   document.body.append(alert);
 
-  setTimeout(() => {
+  setTimeout(function () {
     alert.remove();
   }, ALERT_SHOW_TIME);
 }
@@ -68,7 +68,7 @@ function createFailReceivingMessage() {
 function debounce(fn, ms) {
   let timeout;
 
-  return () => {
+  return function () {
     function fnCall() {
       fn.apply(this, arguments);
     }
