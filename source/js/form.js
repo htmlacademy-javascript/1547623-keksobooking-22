@@ -29,7 +29,9 @@ roomCapacityElement.addEventListener('change', onRoomCapacityElementChange);
 resetFormElement.addEventListener('click', onResetFormElementClick);
 
 formAdvertElement.classList.add('ad-form--disabled');
-fieldAdvertElements.forEach((item) => item.setAttribute('disabled', ''));
+fieldAdvertElements.forEach(function (item) {
+  item.setAttribute('disabled', '');
+});
 
 function onHouseTypeElementChange() {
   setMinPriceForHouseType();

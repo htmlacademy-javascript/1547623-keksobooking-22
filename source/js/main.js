@@ -16,11 +16,11 @@ const SENDING_DATA_URL = 'https://22.javascript.pages.academy/keksobooking';
 
 getData(
   RECEIVING_DATA_URL,
-  (data) => {
+  function (data) {
     initMap();
     setAdverts(data);
   },
-  () => {
+  function () {
     initMap();
     createFailReceivingMessage();
   }

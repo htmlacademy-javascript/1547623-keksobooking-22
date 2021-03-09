@@ -22,12 +22,14 @@ const filtersElements = document.querySelectorAll('.map__filter');
 const mapFeaturesElements = document.querySelectorAll('.map__checkbox');
 
 formFilterElement.classList.add('map__filters--disabled');
-housingFilterElements.forEach((item) => item.setAttribute('disabled', ''));
+housingFilterElements.forEach(function (item) {
+  item.setAttribute('disabled', '');
+});
 housingFeatureElement.setAttribute('disabled', '');
 
 function addOnChangeForFilters(cb) {
-  [...filtersElements, ...mapFeaturesElements].forEach((item) => {
-    item.addEventListener('change', () => {
+  [...filtersElements, ...mapFeaturesElements].forEach(function (item) {
+    item.addEventListener('change', function () {
       cb();
     });
   });
@@ -37,8 +39,12 @@ function enableForm() {
   formFilterElement.classList.remove('map__filters--disabled');
   formAdvertElement.classList.remove('ad-form--disabled');
 
-  fieldAdvertElements.forEach((item) => item.removeAttribute('disabled'));
-  housingFilterElements.forEach((item) => item.removeAttribute('disabled'));
+  fieldAdvertElements.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+  housingFilterElements.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
   housingFeatureElement.removeAttribute('disabled');
 }
 
@@ -89,7 +95,7 @@ function checkAdvertsByPrice(ads) {
 }
 
 function checkAdvertsByFeatures(ads) {
-  return [...mapFeaturesElements].every((item) => {
+  return [...mapFeaturesElements].every(function (item) {
     if (item.checked) {
       return ads.offer.features.indexOf(item.value) !== -1;
     } else {

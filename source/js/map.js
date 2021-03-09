@@ -35,7 +35,7 @@ let defaultAdverts = [];
 
 function initMap() {
   map
-    .on('load', () => {
+    .on('load', function () {
       enableForm();
       setAddress(MAP_COORDINATES);
     })
@@ -47,7 +47,7 @@ function initMap() {
 
   setPositionMainMarker(MAP_COORDINATES);
 
-  mainMarker.on('move', (evt) => {
+  mainMarker.on('move', function (evt) {
     setAddress(evt.target.getLatLng());
   });
   mainMarker.addTo(map);
@@ -58,7 +58,11 @@ function initMap() {
 function setAdverts(adverts) {
   if (adverts && adverts.length) {
     defaultAdverts = adverts.slice(0, MAX_ADVERTS_COUNT);
-    addOnChangeForFilters(debounce(() => createMarkers(getFilteredAdverts(adverts)), RERENDER_DELAY));
+    addOnChangeForFilters(
+      debounce(function () {
+        createMarkers(getFilteredAdverts(adverts));
+      }, RERENDER_DELAY)
+    );
     createMarkers(getFilteredAdverts(adverts));
   }
 }
@@ -74,7 +78,7 @@ function resetMainMarker(coords) {
 
 function createMarkers(array) {
   markers.clearLayers();
-  array.forEach((item) => {
+  array.forEach(function (item) {
     const marker = L.marker({ lat: item.location.lat, lng: item.location.lng }, { icon: pinIcon });
     marker.addTo(markers).bindPopup(createCardsMarkup([item]).cloneNode(true).firstChild);
   });
